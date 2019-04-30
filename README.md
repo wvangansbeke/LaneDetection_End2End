@@ -1,4 +1,5 @@
-# LaneDetection_End2End
+# End-to-end Lane Detection
+
 This repo contains the implementation of our paper [End-to-end Lane Detection through Differentiable Least-Squares Fitting](https://arxiv.org/abs/1902.00293v1) by Bert De Brabandere\*, Wouter Van Gansbeke\*, Davy Neven, Marc Proesmans and Luc Van Gool.
 
 ## Setup and design
