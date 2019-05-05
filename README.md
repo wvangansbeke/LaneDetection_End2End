@@ -15,11 +15,15 @@ Finally we show results for egolane detection. The implementation proofs that th
 I just updated the code to the most recent version of Pytorch (=pytorch 1.0.1) with python 3.7.
 The other required packages are: opencv, scikit-learn, torchvision, numpy, matplotlib, json/ujson and pillow.
 
+## Dataset
+
+For the egolane detection experiment, I used a subset from the [TuSimple](http://benchmark.tusimple.ai/#/) dataset. You can download it [here](https://drive.google.com/drive/folders/1UECiIOGjIua9ORIDfcZft8XGTQ-iTzuD?usp=sharing). You can find the images as well as the ground truth annotations in this folder to save you some work. Automatically 20% of the data will be used for validation. TuSimple provides the user 3 json files with ground truth coordinates of the lane lines. I appended the three files and used the index in this  json file to name a specific image. For example: file "10.jpg" in the data directory corresponds with "10.png" in the ground truth directory and with index 10 in the json files (= label_data_all.json and Curve_parameters.json).
+
+You can download the complete TuSimple dataset from [here](https://github.com/TuSimple/tusimple-benchmark/issues/3).
+
+In the file Labels/Curve_parameters.json, the coefficients of the second degree polynomials are shown for the multiple lane lines in a bird's eye view perspective for the a subset of the data. (three zeros means that the lane line is not present in the image). So, the coefficients for the whole dataset are already computed for you.
+
 ## Run Code
-
-The TuSimple dataset has been used for this experiment. I will try to make the train-validation split available as well as the ground truth annotations to save the user this work.
-In the file Labels/Curve_parameters.json, the coefficients of the second degree polynomials are shown for the multiple lane lines in a bird's eye view perspective for the a subset of the data. (three zeros means that the lane line is not present in the image)
-
 To run the code (training phase):
 
 ` python main.py --image_dir /path/to/image/folder --gt_dir /path/to/ground_truth/folder --end_to_end True`
