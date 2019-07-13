@@ -2,6 +2,16 @@
 
 This repo contains the implementation of our paper [End-to-end Lane Detection through Differentiable Least-Squares Fitting](https://arxiv.org/abs/1902.00293v1) by Bert De Brabandere\*, Wouter Van Gansbeke\*, Davy Neven, Marc Proesmans and Luc Van Gool.
 
+If you find this interesting or relevant for your work, consider citing:
+```
+@article{wvangansbeke_2019,
+  title={End-to-end Lane Detection through Differentiable Least-Squares Fitting},
+  author={De Brabandere, Bert and Van Gansbeke, Wouter and Neven, Davy and Proesmans, Marc and Van Gool, Luc},
+  journal={arXiv preprint arXiv:1902.00293},
+  year={2019}
+}
+```
+
 ## Setup
 
 This repository compares two methods to achieve higher accuracy for lane detection applications. The former is the conventional segmentation approach and the latter will tackle this problem in an end-to-end manner. The segmentation approach depends on the cross-entropy loss in order to learn the road markings by attention. However this approach is not necessarily the most accurate. Since the final line coordinates are desired, a complete end-to-end method should achieve better results.
