@@ -73,3 +73,4 @@ Practical discussion for multi lane detection:
 
 ## TODO
 - [ ] Augment first module with an instance segmentation method to output each instance sequentially.
+- [ ] Add instructions in readme to train on custom dataset.
