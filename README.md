@@ -70,3 +70,6 @@ Practical discussion for multi lane detection:
 - Pretrainig: When a high number of lane lines are desired to be detected, the supervision could be be too weak (depending on the initialization and the network). Pretraining using a few segmentation labels is a good way to alleviate this problem.
 
 - Proxy segmentation task: You could also combine our method with a proxy segmentation task in a shared encoder architecture. This can have some benefits (i.e. good initialization for the weight maps), although this makes the setup more complex.
+
+## TODO
+- [ ] Augment first module with an instance segmentation method to output each instance sequentially.
