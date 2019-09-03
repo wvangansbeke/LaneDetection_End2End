@@ -1,8 +1,7 @@
 # End-to-end Lane Detection
 
-# ATTENTION:
-I will temporarily make the code private since the legal team wants to find an appropriate license (code can be used for academic purposes only). I will put it back online soon (~ 1 week). I will also use this moment to make some changes. You can still ask questions in the meantime. Sorry for the inconvenience.
-
+## Update
+I added a new directory __Backprojection_loss__ which is very similar to the other one. However, now the loss is a regression towards the coordinates in the original perspective instead of a regression in the birds eye view perspective towards the lane-line coefficients. We are primarily interested in the accuracy in this perspecitve after all. It also contains multi-lane detection experiments.
 
 This repo contains the implementation of our paper [End-to-end Lane Detection through Differentiable Least-Squares Fitting](https://arxiv.org/abs/1902.00293v1) by Bert De Brabandere\*, Wouter Van Gansbeke\*, Davy Neven, Marc Proesmans and Luc Van Gool.
 
@@ -16,6 +15,10 @@ If you find this interesting or relevant for your work, consider citing:
 }
 ```
 
+## License
+
+This software is released under a creative commons license which allows for personal and research use only. For a commercial license please contact the authors. You can view a license summary [here](http://creativecommons.org/licenses/by-nc/4.0/)
+
 ## Setup
 
 This repository compares two methods to achieve higher accuracy for lane detection applications. The former is the conventional segmentation approach and the latter will tackle this problem in an end-to-end manner. The segmentation approach depends on the cross-entropy loss in order to learn the road markings by attention. However this approach is not necessarily the most accurate. Since the final line coordinates are desired, a complete end-to-end method should achieve better results.
@@ -26,7 +29,7 @@ Finally we show results for egolane detection. The implementation proofs that th
 
 ## Requirements
 
-I just updated the code to the most recent version of Pytorch (=pytorch 1.0.1) with python 3.7.
+I just updated the code to the most recent version of Pytorch (=pytorch 1.1) with python 3.7.
 The other required packages are: opencv, scikit-learn, torchvision, numpy, matplotlib, json/ujson and pillow.
 
 ## Dataset
@@ -52,6 +55,9 @@ The weight maps will be computed but be aware that the appearance of the weight 
 
 ## Results Egolane Detection 
 
+Our network architecture is based on [ERFNet](https://github.com/Eromera/erfnet_pytorch).
+
+
 | Method | Model | Area metric | Area<sup>2</sup> loss|
 | --- | --- | --- | --- | 
 | Segmentation | ERFNet | 1.603e-3 normalized | 2.733e-5  normalized |
@@ -67,7 +73,7 @@ Practical discussion for multi lane detection:
 
 - Instance segmentation: We primarily want to focus on our differentiable least squares module from our paper. This module is compatible with whatever method you choose. See it as an extra layer of the network to make lane detection completely end-to-end. Hence, an instance segmentation method can be combined with our method.
 
-- To detect multiple lanes more robustly, the mask in the Networks/LSQ_layer.py file can be exploited.
+- To detect multiple lanes more robustly, the mask in the `Networks/LSQ_layer.py` file can be exploited.
 
 - Continual learning setup: A possibility is to focus first on egolanes and add more lane lines during training. This makes the task more difficult over time. This will improve the convergence, since the features of the first lane lines can help to detect the later ones.
 
@@ -75,6 +81,5 @@ Practical discussion for multi lane detection:
 
 - Proxy segmentation task: You could also combine our method with a proxy segmentation task in a shared encoder architecture. This can have some benefits (i.e. good initialization for the weight maps), although this makes the setup more complex.
 
-## TODO
-- [ ] Augment first module with an instance segmentation method to output each instance sequentially.
-- [ ] Add instructions in readme to train on custom dataset.
+## Acknowledgement
+This work was supported by Toyota, and was carried out at the TRACE Lab at KU Leuven (Toyota Research on Automated Cars in Europe - Leuven)
