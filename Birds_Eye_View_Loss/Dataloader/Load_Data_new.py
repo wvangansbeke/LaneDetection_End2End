@@ -331,6 +331,95 @@ def my_collate(batch):
     return default_collate(batch)
 
 
+def write_lsq_results(src_file, dst_file, nclasses, all_branches_ready, 
+                      horizon_on, resize, no_ortho, calc_intersection=False, 
+                      draw_image=False, path_test_set = '../../../', test_phase=False):
+    '''
+    Computes json file with point coordinates for every lane
+    '''
+    factor = 640/resize
+    y_start = 0.3
+    y_stop = 1
+    src = np.float32([[0.45,y_start],[0.55, y_start],[0.1,y_stop],[0.9, y_stop]])
+    dst = np.float32([[0.45, y_start],[0.55, y_start],[0.45, y_stop],[0.55,y_stop]])
+    M = cv2.getPerspectiveTransform(src,dst)
+    M_inv = cv2.getPerspectiveTransform(dst,src)
+    lines = [json.loads(line) for line in open(src_file).readlines()]
+    with open(dst_file, 'w') as jsonFile:
+        for i, line in enumerate(lines):
+            h_samples = line['h_samples']
+            y_orig = np.array(h_samples)
+            y_d = (np.array(h_samples)-80)/639
+            y_prime = ((M[1][1]*y_d + M[1][2])/(M[2][1]*y_d+M[2][2]))
+            y_eval = (1-y_prime)
+            lanes_json = np.full((nclasses,len(h_samples)), -2)
+            lanes = line["lanes"]
+            params = line["params"]
+            line_id = line["line_id"]
+            horizon = line["horizon_est"]
+            
+            if draw_image and i%50==0:
+                path = path_test_set + 'test_set/' + line["raw_file"]
+                img = plt.imread(path)
+                img = np.asarray(img)
+            
+            if calc_intersection:
+                maxima = instersection_points(params, M_inv, resize)
+                
+            no_left_line = True if line_id[0] == 0 else False
+            no_right_line = True if line_id[3] == 0 else False
+            for j in range(len(params)):
+                if test_phase:
+                    lane = lanes
+                else:
+                    lane = lanes[j]
+                if all_branches_ready:
+                    if (j==2 and no_left_line) or (j==3 and no_right_line):
+                        continue
+                else:
+                    zipped_y_vals = [(x,y) for x,y in zip(lane, h_samples) if x!=-2]
+                    if len(zipped_y_vals) == 0:
+                        continue
+                
+                h = [y for x,y in zip(lane, h_samples) if x!=-2]
+                if len(h) == 0:
+                    minimum, maximum = 250, 710
+                else:
+                    minimum, maximum = np.min(h), np.max(h) 
+                if all_branches_ready and horizon_on:
+                    minimum = sum(horizon)*factor+80
+                    if calc_intersection:
+                        maximum = maxima[j]*factor+84
+                params_j = [0]*(3-len(params[j])) + params[j]
+                a,b,c = params_j
+                
+                if not no_ortho:
+                    x_new = (a*y_eval**2 + b*y_eval + c)
+                    x_new, y_new = homogenous_transformation(M_inv, x_new, y_prime)
+                else:
+                    y_new = 1-y_d
+                    x_new = (a*y_new**2 + b*y_new + c)
+                x_new, y_new = x_new*1279, y_new*639+80 
+                x_new = np.int_(np.round(x_new))
+                x_new, y_new = zip(*[(x,y) if y >= max(210,minimum) and y <= maximum else (-2,y) 
+                                for x,y in zip(x_new, y_orig)])
+                
+                lanes_json[j] = list(x_new)
+                
+                if draw_image and i%50==0:
+                    pt = [(xcord, ycord) for (xcord, ycord) in zip(x_new, y_new) if xcord!=-2]
+                    for idx in pt:
+                        cv2.circle(img, idx, radius=4, thickness=-1, color=(255, 0, 0))
+            if draw_image and i%50==0:
+                img = Image.fromarray(img)
+                img.save('../Evaluate/Results/{}.png'.format(i))
+            json_line = line
+            json_line["run_time"] = 20
+            json_line["lanes"] = lanes_json.tolist()
+            json.dump(json_line, jsonFile)
+            jsonFile.write('\n' )
+
+
 def load_valid_set_file(valid_idx):
     file1 = "Labels/label_data_0313.json"
     file2 = "Labels/label_data_0531.json"
