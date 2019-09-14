@@ -1,8 +1,5 @@
 # End-to-end Lane Detection
 
-## Update
-I added a new directory __Backprojection_loss__ which is very similar to the other one. However, now the loss is a regression towards the coordinates in the original perspective instead of a regression in the birds eye view perspective towards the lane-line coefficients. We are primarily interested in the accuracy in this perspecitve after all. It also contains multi-lane detection experiments on the complete dataset of TuSimple (3626 images). 
-
 This repo contains the implementation of our paper [End-to-end Lane Detection through Differentiable Least-Squares Fitting](https://arxiv.org/abs/1902.00293) by Wouter Van Gansbeke, Bert De Brabandere, Davy Neven, Marc Proesmans and Luc Van Gool.
 
 If you find this interesting or relevant for your work, consider citing:
@@ -14,9 +11,8 @@ If you find this interesting or relevant for your work, consider citing:
   year={2019}
 }
 ```
-
 ## Update
-I added a new directory __Backprojection_loss__ which is very similar to the other one. However, now the loss is a regression towards the coordinates in the original perspective instead of a regression in the birds eye view perspective towards the lane-line coefficients. We are primarily interested in the accuracy in this perspecitve after all. It also contains multi-lane detection experiments.
+I added a new directory __Backprojection_loss__ which is very similar to the other one. However, now the loss is a regression towards the coordinates in the original perspective instead of a regression in the birds eye view perspective towards the lane-line coefficients. We are primarily interested in the accuracy in this perspecitve after all. It also contains multi-lane detection experiments on the complete dataset of TuSimple (3626 images). 
 
 ## License
 
