@@ -66,7 +66,7 @@ Our network architecture is based on [ERFNet](https://github.com/Eromera/erfnet_
 (<sup>1</sup> Based on 3.7 m standard lane width in the US)
 
 
-## Discussion
+## General Discussion
 
 Practical discussion for multi lane detection:
 
@@ -79,6 +79,20 @@ Practical discussion for multi lane detection:
 - Pretrainig: When a high number of lane lines are desired to be detected, the supervision could be be too weak (depending on the initialization and the network). Pretraining using a few segmentation labels is a good way to alleviate this problem.
 
 - Proxy segmentation task: You could also combine our method with a proxy segmentation task in a shared encoder architecture. This can have some benefits (i.e. good initialization for the weight maps), although this makes the setup more complex.
+
+## Results Discussion
+Egolane setup: 
+
+In this case you only need to detect the line on the left and right of the car.
+It should be fairly easy to get the numbers reported in the paper with the provided code above. 
+
+Multi-lane setup:
+
+We actually advice to use our proposed loss jointly with a cross-entropy loss on the segmentation maps (proxy task), since it is the most robust one.
+It forces the network to look at the lane-lines during training, stabilizing the training.
+The proposed least squares loss still improves over the vanilla cross-entropy loss, since it's able to optimize for the desired y-coordinates directly. By additionally finetuning the fixed birds-eye view transformation matrix you should get around 95.8%.
+If you don't use any additional attention nor finetuning, you should get around 93.2% on the TuSimple test set.
+
 
 ## Acknowledgement
 This work was supported by Toyota, and was carried out at the TRACE Lab at KU Leuven (Toyota Research on Automated Cars in Europe - Leuven)
