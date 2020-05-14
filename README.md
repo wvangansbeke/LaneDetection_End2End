@@ -88,7 +88,7 @@ It should be fairly easy to get the numbers reported in the paper with the provi
 
 Multi-lane setup:
 
-We actually advice to use our proposed loss jointly with a cross-entropy loss on the segmentation maps (proxy task), since it is the most robust one.
+We actually advise to use our proposed loss jointly with a cross-entropy loss on the segmentation maps (proxy task), since it is the most robust one.
 It forces the network to look at the lane-lines during training, stabilizing the training.
 The proposed least squares loss still improves over the vanilla cross-entropy loss, since it's able to optimize for the desired y-coordinates directly. By additionally finetuning the fixed birds-eye view transformation matrix you should get around 95.8%.
 If you don't use any additional attention nor finetuning, you should get around 93.2% on the TuSimple test set.
